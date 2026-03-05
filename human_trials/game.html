@@ -1268,16 +1268,22 @@
                         ejectionBox.style.borderColor = "var(--error-color)";
                     }
                     ejectionBox.style.display = "block";
+
+                    // Force-hide after 5 seconds regardless of game state or spectator mode
+                    setTimeout(() => {
+                        // If not in ejection state and banner is showing, hide it
+                        ejectionBox.style.display = "none";
+                        lastEjectedPlayer = null; // Reset the last ejected player after hiding
+                    }, 5000);
                 }
             } else {
-                // Only hide after minimum display time (5 seconds) passed.
+                // If not in ejection state and banner is showing, hide it
                 if (lastEjectedPlayer && (Date.now() - ejectionScreenDisplay > 5000)) {
                     ejectionBox.style.display = "none"; // Hide the box if we're not in an ejection state
                     lastEjectedPlayer = null; // Reset the last ejected player when we're no longer in an ejection state
                 }
             }
-            // --------- End of Ejection Message Logic ---------
-            ;
+             // --------- End of Ejection Message Logic ---------
             if (state.waiting_for_monitor_room && state.monitor_rooms) {
                 if (!waitingForMonitorRoom) {
                     waitingForMonitorRoom = true;
