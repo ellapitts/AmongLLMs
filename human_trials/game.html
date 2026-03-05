@@ -471,11 +471,11 @@
                 <div id="aiThoughts" style="font-family: 'Courier New', monospace; font-size: 0.9em; white-space: pre-wrap;">
                 </div>
             </div>
-        
-            <div id="ejectionAnnouncement"
-                style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.9); border: 4px solid var(--error-color); padding: 40px; border-radius: 20px; text-align: center; z-index: 10000; width: 80%; max-width: 600px; box-shadow: 0 0 50px rgba(241, 77, 67, 0.6);">
+            <!-- Ejection Announcement Box Styling (called within renderGameState()) -->
+            <div id="ejectionAnnouncement" class="section"
+                style="display:none; text-align: center; padding: 18px 24px; margin-bottom: 25px; border-width: 2px; border-style: solid;">
                 <h2 id="ejectionText"
-                    style="color: #fff; font-family: 'Segoe UI', sans-serif; font-size: 1.5em; margin: 0; text-transform: uppercase; letter-spacing: 3px;">
+                    style="color: var(--text-light); font-family: 'Segoe UI', sans-serif; font-size: 1.25em; margin: 0; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">
                 </h2>
             </div>
 
@@ -572,6 +572,7 @@
 
         // Flag to prevent ejection popup retriggering after initial display
         let lastEjectedPlayer = null;
+        let ejectionShowTime = 0; // ejection message display timestamp for auto-hide logic
 
 
         // Add error checking for DOM elements
@@ -903,10 +904,9 @@
           if (!checkRequiredElements()) {
               return;
           }
-          // ----------- Ejection Message Popup Logic -----------
+          // ----------- Ejection Message Popup Logic ----------- 
           const ejectionBox = document.getElementById('ejectionAnnouncement');
           const ejectionWords = document.getElementById('ejectionText');
-
           const player_info = state.player_info || '';
           const player_info_lc = player_info.toLowerCase();
 
@@ -927,16 +927,29 @@
             // Show once and only show the popup if we have new ejection results to display
             if (results && results !== lastEjectedPlayer) {
                 lastEjectedPlayer = results; // Locks message to only trigger and display once
-                ejectionWords.textContent = results;
+                ejectionScreenDisplay = Date.now(); // Timestamp for when the ejection message was displayed (for auto-hide timing if desired)
+                
+                const noneEjected = results.toLowerCase().includes("no one was ejected");
+                ejectionWords.textContent = results; // Set the text of the ejection results
+
+                // Style the box background color based on if player's ejection statuss
+                if (noneEjected) {
+                    // If no one was ejected, use BLUE Background color to indicate this outcome
+                    ejectionBox.style.backgroundColor = "rgba(67, 67, 241, 0.9)"; // Blue for no ejection
+                    ejectionBox.style.borderColor   = "var(--primary-color)";
+                } else {    
+                    // Player is ejected, use RED background color to indicate this outcome                
+                    ejectionBox.style.backgroundColor = "rgba(241, 67, 67, 0.9)"; 
+                    ejectionBox.style.borderColor   = "var(--error-color)";
+                }   
                 ejectionBox.style.display = "block";
             }
-
-            // Close box after 5 seconds
-            setTimeout(() => {
-                ejectionBox.style.display = "none";
-            }, 5000);
-          } else {
-            lastEjectedPlayer = null; // Reset the flag when the message finally leaves the server's text buffer
+        } else {
+            // Only hide after minimum display time (5 seconds) passed.
+            if (lastEjectedPlayer && (Date.now() - ejectionScreenDisplay > 5000)) {
+                ejectionBox.style.display = "none"; // Hide the box if we're not in an ejection state
+                lastEjectedPlayer = null; // Reset the last ejected player when we're no longer in an ejection state
+            }
         }
           // --------- End of Ejection Message Logic ---------
 ;
@@ -963,10 +976,22 @@
                 const maxSteps = state.max_timesteps || 50;
                 stepInfo.textContent = `${currentStep}/${maxSteps}`;
             }
-
+            
+            /*
+                * Turn indicator: shows "Your Turn - Player N (color)" in green
+                * when it's the human's turn, or "Other players..." in blue
+                * when AI agents are acting. Hides specific AI player names
+                * so the human only sees when it's their turn vs. waiting.
+            */
             const currentPlayerInfo = document.getElementById('currentPlayerInfo');
             if (currentPlayerInfo) {
-                currentPlayerInfo.textContent = `${state.current_player || 'Unknown'}`;
+                if (state.is_human_turn) {
+                    const name = humanPlayerInfo ? humanPlayerInfo.player_name : '';
+                    const color = humanPlayerInfo ? humanPlayerInfo.color : '';
+                    currentPlayerInfo.innerHTML = `<span style="color: var(--success-color);">Your Turn - ${name}${color ? ' (' + color + ')' : ''}</span>`; // styles green signaling human player's turn
+                } else {
+                    currentPlayerInfo.innerHTML = `<span style="color: var(--primary-color);">Other players...</span>`; // styles default color when it's not human player's turn
+                }
             }
 
             // Use the stored human player info instead of trying to extract it from the state
