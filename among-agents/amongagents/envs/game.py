@@ -753,11 +753,11 @@ class MessageSystem:
                 round = max_rounds - env.discussion_rounds_left + 1
                 phase_info = f"Meeting phase - Discussion round ({round}/{max_rounds})"
                 instruction = MEETING_PHASE_INSTRUCTION
-        message = f"Game Time: {env.timestep}/{env.game_config['max_timesteps']}\n"
+        message = f"GAME TIME: {env.timestep}/{env.game_config['max_timesteps']}\n"
         message += f"Current phase: {phase_info}\n"
         message += f"{instruction}\n"
         players_text = ", ".join(record["players"])
-        message += f"Current Location: {record['location']}\n"
+        message += f"CURRENT LOCATION: {record['location']}\n"
         message += f"Players in {record['location']}: {players_text}\n\n"
         return message
 
