@@ -105,14 +105,14 @@ class Player:
         return text
 
     def available_actions_prompt(self):
-        text = "Available actions:\n"
+        text = "YOUR AVAILABLE ACTIONS (pick one):\n"
         for i, action in enumerate(self.available_actions):
             text += f"{i + 1}. {action}\n"
         return text
 
     def action_history_prompt(self):
         """Return recent action history. Older actions should be captured in condensed memory."""
-        text = "Action history:\n"
+        text = "YOUR ACTION HISTORY:\n"
         if len(self.action_history) == 0:
             text += "No actions have been taken yet.\n"
         else:
@@ -137,7 +137,7 @@ class Player:
 
     def observation_history_prompt(self):
         # Show all observations since player's last action
-        text = "Observation history:\n"
+        text = "OBSERVATION HISTORY OF ALL PLAYERS:\n"
         if (
             len(self.observation_history) == 0
             or self.observations_since_last_action == 0
@@ -152,7 +152,7 @@ class Player:
         return text
 
     def tasks_prompt(self):
-        text = "Your Assigned Tasks:\n"
+        text = "YOUR ASSIGNED TASKS:\n"
         if len(self.tasks) == 0:
             text += "No tasks have been assigned yet.\n"
         else:
