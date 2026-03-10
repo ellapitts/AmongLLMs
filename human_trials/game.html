@@ -719,6 +719,9 @@
                 <label for="playerNameInput">Your Name:</label>
                 <input type="text" id="playerNameInput" value="Victor" placeholder="Enter your name" />
             </div>
+            <button id="startGameBtn" onclick="startNewGame()">
+                Start New Game
+            </button>
             <!-- Add options for different game sizes later if needed -->
 
             <!-- Player rulebook for game -->
@@ -846,10 +849,6 @@
                     </ul>
                 </div>
             </div>
-
-             <button id="startGameBtn" onclick="startNewGame()">
-                Start New Game
-            </button>
         </div>
         <!-- Game for Spectator Screen Mode -->
         <div class="game-screen" id="gameScreen">
@@ -964,20 +963,16 @@
                     <textarea id="speakMessage" placeholder="Enter your message here..."></textarea>
                     <!-- Memory and Thinking Sections -->
                     <div class="memory-thinking-section">
-                        <h3>Optional: Add your notes & thoughts </h3>
+                        <h3>Optional: Add Your Thoughts</h3>
                         <div class="memory-field">
-                            <label for="condensedMemory">Scratchpad
-                                <span style="font-weight: normal; color: var(--text-dark); font-size: 0.85em">
-                                    note down anything you want to remember: 
-                                </span>
-                            </label>
+                            <label for="condensedMemory">Scratchpad:</label>
                             <textarea id="condensedMemory"
-                                placeholder="Turn 3: Player 3 was alone in Electrical. Turn 5: Player 5 found dead there...'"></textarea>
+                                placeholder="Keep track of your observations and thoughts..."></textarea>
                         </div>
                         <div class="thinking-field">
                             <label for="thinkingProcess">Thinking Process:</label>
                             <textarea id="thinkingProcess"
-                                placeholder="Describe your reasoning and strategy (e.g. 'I moved to Electrical because Player 3 has been there alone twice and I want to check...')"></textarea>
+                                placeholder="Describe your reasoning and strategy..."></textarea>
                         </div>
                     </div>
 
