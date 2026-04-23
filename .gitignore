@@ -19,6 +19,22 @@ linear-probes/checkpoints/
 # evaluations/results
 evaluations/results/
 
+# Local MinIO bucket storage (docker-compose volume mount)
+minio_data/
+
+# LLM_judge local scratch files (per-judge raw + final aggregated)
+judge_game_*.json
+.game_manifest.json
+
+# LLM_judge data directory — track folder structure, ignore contents
+LLM_judge/data/**
+!LLM_judge/data/
+!LLM_judge/data/.gitkeep
+!LLM_judge/data/results/
+!LLM_judge/data/results/.gitkeep
+!LLM_judge/data/graphs/
+!LLM_judge/data/graphs/.gitkeep
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
